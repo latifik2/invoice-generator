@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор Документов & Счетов (DOCX, XLSX, PDF)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-file-contract logo-icon"></i>
+                <div>
+                    <h1>DocGen Studio</h1>
+                    <p class="subtitle">Генерация счетов, договоров и актов по шаблонам (Word, Excel, PDF)</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button type="button" id="btn-demo" class="btn btn-outline" title="Заполнить демо-данными">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Демо-данные
+                </button>
+                <button type="button" id="btn-clear" class="btn btn-secondary" title="Очистить форму">
+                    <i class="fa-solid fa-rotate-left"></i> Сбросить
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <form id="invoice-form" onsubmit="event.preventDefault();">
+            
+            <!-- Section 1: Document Parameters -->
+            <section class="card">
+                <div class="card-header">
+                    <i class="fa-solid fa-file-invoice icon-header"></i>
+                    <h2>Параметры документа</h2>
+                </div>
+                <div class="card-body grid-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа *</label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-hashtag input-icon"></i>
+                            <input type="text" id="document_number" name="document_number" value="СЧ-0042" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="document_date">Дата документа *</label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-calendar-days input-icon"></i>
+                            <input type="date" id="document_date" name="document_date" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tax_rate">Ставка НДС (%)</label>
+                        <div class="input-icon-wrapper">
+                            <i class="fa-solid fa-percent input-icon"></i>
+                            <select id="tax_rate" name="tax_rate">
+                                <option value="20" selected>20% (Стандартная)</option>
+                                <option value="10">10% (Льготная)</option>
+                                <option value="0">0% (Без НДС / УСН)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grid 2 Columns for Companies -->
+            <div class="grid-2">
+                
+                <!-- Supplier Info -->
+                <section class="card">
+                    <div class="card-header border-blue">
+                        <i class="fa-solid fa-building-user icon-header"></i>
+                        <h2>Поставщик (Исполнитель)</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="company_name">Название организации / ИП *</label>
+                            <input type="text" id="company_name" value="ООО «Инновационные Технологии»" required>
+                        </div>
+                        <div class="grid-2-inner">
+                            <div class="form-group">
+                                <label for="company_inn">ИНН</label>
+                                <input type="text" id="company_inn" value="7701234567">
+                            </div>
+                            <div class="form-group">
+                                <label for="company_kpp">КПП</label>
+                                <input type="text" id="company_kpp" value="770101001">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company_ogrn">ОГРН</label>
+                            <input type="text" id="company_ogrn" value="1234567890123">
+                        </div>
+                        <div class="form-group">
+                            <label for="company_address">Юридический адрес</label>
+                            <input type="text" id="company_address" value="г. Москва, ул. Тверская, д. 10, оф. 402">
+                        </div>
+                        <div class="grid-2-inner">
+                            <div class="form-group">
+                                <label for="company_phone">Телефон</label>
+                                <input type="text" id="company_phone" value="+7 (495) 123-45-67">
+                            </div>
+                            <div class="form-group">
+                                <label for="company_email">Email</label>
+                                <input type="email" id="company_email" value="info@innotech.ru">
+                            </div>
+                        </div>
+                        <div class="grid-2-inner">
+                            <div class="form-group">
+                                <label for="company_bank_name">Банк</label>
+                                <input type="text" id="company_bank_name" value="АО «Альфа-Банк»">
+                            </div>
+                            <div class="form-group">
+                                <label for="company_bik">БИК</label>
+                                <input type="text" id="company_bik" value="044525593">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="company_account">Расчетный счет (Р/с)</label>
+                            <input type="text" id="company_account" value="40702810900000001234">
+                        </div>
+                        <div class="form-group">
+                            <label for="company_ceo_name">Руководитель (ФИО)</label>
+                            <input type="text" id="company_ceo_name" value="Иванов И.И.">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Client Info -->
+                <section class="card">
+                    <div class="card-header border-purple">
+                        <i class="fa-solid fa-users-gear icon-header"></i>
+                        <h2>Покупатель (Заказчик)</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="client_name">Название клиента / Заказчика *</label>
+                            <input type="text" id="client_name" value="АО «Вектор Прогресса»" required>
+                        </div>
+                        <div class="grid-2-inner">
+                            <div class="form-group">
+                                <label for="client_inn">ИНН</label>
+                                <input type="text" id="client_inn" value="7802987654">
+                            </div>
+                            <div class="form-group">
+                                <label for="client_kpp">КПП</label>
+                                <input type="text" id="client_kpp" value="780201001">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="client_ogrn">ОГРН</label>
+                            <input type="text" id="client_ogrn" value="9876543210987">
+                        </div>
+                        <div class="form-group">
+                            <label for="client_address">Адрес заказчика</label>
+                            <input type="text" id="client_address" value="г. Санкт-Петербург, Невский пр., д. 50">
+                        </div>
+                        <div class="grid-2-inner">
+                            <div class="form-group">
+                                <label for="client_phone">Телефон</label>
+                                <input type="text" id="client_phone" value="+7 (812) 987-65-43">
+                            </div>
+                            <div class="form-group">
+                                <label for="client_email">Email</label>
+                                <input type="email" id="client_email" value="contact@vector.ru">
+                            </div>
+                        </div>
+                        <div class="grid-2-inner">
+                            <div class="form-group">
+                                <label for="client_bank_name">Банк</label>
+                                <input type="text" id="client_bank_name" value="ПАО Сбербанк">
+                            </div>
+                            <div class="form-group">
+                                <label for="client_bik">БИК</label>
+                                <input type="text" id="client_bik" value="044525225">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="client_account">Расчетный счет (Р/с)</label>
+                            <input type="text" id="client_account" value="40702810000000000001">
+                        </div>
+                        <div class="form-group">
+                            <label for="client_corr_account">Корр. счет (К/с)</label>
+                            <input type="text" id="client_corr_account" value="30101810400000000225">
+                        </div>
+                        <div class="form-group">
+                            <label for="client_contact_person">Контактное лицо</label>
+                            <input type="text" id="client_contact_person" value="Петров П.П.">
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Items Table Section -->
+            <section class="card">
+                <div class="card-header space-between">
+                    <div class="flex-center">
+                        <i class="fa-solid fa-boxes-packing icon-header"></i>
+                        <h2>Позиции (Товары и услуги)</h2>
+                    </div>
+                    <button type="button" id="btn-add-item" class="btn btn-sm btn-primary">
+                        <i class="fa-solid fa-plus"></i> Добавить позицию
+                    </button>
+                </div>
+                <div class="card-body no-padding">
+                    <div class="table-responsive">
+                        <table class="items-table" id="items-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">№</th>
+                                    <th>Наименование товара / услуги</th>
+                                    <th style="width: 100px;">Ед. изм.</th>
+                                    <th style="width: 110px;">Кол-во</th>
+                                    <th style="width: 140px;">Цена (руб.)</th>
+                                    <th style="width: 150px;">Сумма (руб.)</th>
+                                    <th style="width: 60px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="items-tbody">
+                                <!-- Dynamic rows inserted by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Totals Footer Panel -->
+                    <div class="totals-summary-panel">
+                        <div class="notes-wrapper">
+                            <label for="notes"><i class="fa-regular fa-note-sticky"></i> Примечание к счету</label>
+                            <textarea id="notes" rows="3" placeholder="Укажите условия оплаты или доставки...">Оплата в течение 5 банковских дней с момента выставления счета.</textarea>
+                        </div>
+                        <div class="totals-box">
+                            <div class="total-row">
+                                <span>Итого без НДС:</span>
+                                <span id="summary-subtotal" class="amount">0.00 руб.</span>
+                            </div>
+                            <div class="total-row">
+                                <span>НДС (<span id="summary-vat-rate">20</span>%):</span>
+                                <span id="summary-vat" class="amount">0.00 руб.</span>
+                            </div>
+                            <div class="total-row main-total">
+                                <span>Всего к оплате:</span>
+                                <span id="summary-total" class="amount">0.00 руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Floating Action Bar for Generating Documents -->
+            <div class="action-bar-sticky">
+                <div class="action-bar-content">
+                    <div class="action-bar-info">
+                        <span class="action-bar-title">Сформировать документ:</span>
+                        <span class="action-bar-sub">Выберите необходимый формат файла</span>
+                    </div>
+                    <div class="export-buttons">
+                        <button type="button" id="btn-export-docx" class="btn btn-export btn-docx">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Счет на оплату (.docx)
+                        </button>
+                        <button type="button" id="btn-export-acceptance" class="btn btn-export btn-xlsx" style="background: var(--primary);">
+                            <i class="fa-solid fa-file-signature"></i> Акт (.docx)
+                        </button>
+                        <button type="button" id="btn-export-pdf" class="btn btn-export btn-pdf">
+                            <i class="fa-solid fa-file-pdf"></i> PDF (.pdf)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Application Script -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
