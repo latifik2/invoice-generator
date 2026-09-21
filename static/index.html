@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css?v=5">
 </head>
 <body>
 
@@ -29,8 +29,8 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button type="button" id="btn-demo" class="btn btn-outline" title="Заполнить демо-данными">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Демо-данные
+                <button type="button" id="btn-theme-toggle" class="btn btn-outline" title="Переключить тему">
+                    <i class="fa-solid fa-moon"></i>
                 </button>
                 <button type="button" id="btn-clear" class="btn btn-secondary" title="Очистить форму">
                     <i class="fa-solid fa-rotate-left"></i> Сбросить
@@ -39,9 +39,32 @@
         </div>
     </header>
 
-    <main class="main-container">
-        <form id="invoice-form" onsubmit="event.preventDefault();">
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-menu">
+                <div style="padding: 0 12px 12px 12px;">
+                    <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="createNewOrder()">
+                        <i class="fa-solid fa-plus"></i> Создать заказ
+                    </button>
+                </div>
+                <a href="#" class="menu-item active" id="menu-view-order" onclick="showView('form')">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Новый заказ</span>
+                </a>
+                <a href="#" class="menu-item" id="menu-orders" onclick="showView('orders')">
+                    <i class="fa-solid fa-list"></i>
+                    <span>Заказы</span>
+                </a>
+            </div>
+        </nav>
+
+        <main class="main-content">
             
+            <!-- VIEW: CREATE / EDIT DOCUMENT -->
+            <div id="view-document-form">
+                <form id="invoice-form" onsubmit="event.preventDefault();">
+                    <fieldset id="document-fieldset" style="border:none; padding:0; margin:0;">
             <!-- Section 1: Document Parameters -->
             <section class="card">
                 <div class="card-header">
@@ -82,124 +105,49 @@
                 
                 <!-- Supplier Info -->
                 <section class="card">
-                    <div class="card-header border-blue">
-                        <i class="fa-solid fa-building-user icon-header"></i>
-                        <h2>Поставщик (Исполнитель)</h2>
+                    <div class="card-header border-blue space-between">
+                        <div class="flex-center">
+                            <i class="fa-solid fa-building-user icon-header"></i>
+                            <h2>Поставщик (Исполнитель)</h2>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline" id="btn-edit-company"><i class="fa-solid fa-pen"></i> Изменить</button>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="company_name">Название организации / ИП *</label>
-                            <input type="text" id="company_name" value="ООО «Инновационные Технологии»" required>
-                        </div>
-                        <div class="grid-2-inner">
-                            <div class="form-group">
-                                <label for="company_inn">ИНН</label>
-                                <input type="text" id="company_inn" value="7701234567">
+                        <div id="company-display" class="read-only-display">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-building-circle-exclamation"></i>
+                                <p>Данные вашей компании не заполнены</p>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="document.getElementById('btn-edit-company').click()">Заполнить</button>
                             </div>
-                            <div class="form-group">
-                                <label for="company_kpp">КПП</label>
-                                <input type="text" id="company_kpp" value="770101001">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="company_ogrn">ОГРН</label>
-                            <input type="text" id="company_ogrn" value="1234567890123">
-                        </div>
-                        <div class="form-group">
-                            <label for="company_address">Юридический адрес</label>
-                            <input type="text" id="company_address" value="г. Москва, ул. Тверская, д. 10, оф. 402">
-                        </div>
-                        <div class="grid-2-inner">
-                            <div class="form-group">
-                                <label for="company_phone">Телефон</label>
-                                <input type="text" id="company_phone" value="+7 (495) 123-45-67">
-                            </div>
-                            <div class="form-group">
-                                <label for="company_email">Email</label>
-                                <input type="email" id="company_email" value="info@innotech.ru">
-                            </div>
-                        </div>
-                        <div class="grid-2-inner">
-                            <div class="form-group">
-                                <label for="company_bank_name">Банк</label>
-                                <input type="text" id="company_bank_name" value="АО «Альфа-Банк»">
-                            </div>
-                            <div class="form-group">
-                                <label for="company_bik">БИК</label>
-                                <input type="text" id="company_bik" value="044525593">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="company_account">Расчетный счет (Р/с)</label>
-                            <input type="text" id="company_account" value="40702810900000001234">
-                        </div>
-                        <div class="form-group">
-                            <label for="company_ceo_name">Руководитель (ФИО)</label>
-                            <input type="text" id="company_ceo_name" value="Иванов И.И.">
                         </div>
                     </div>
                 </section>
 
                 <!-- Client Info -->
                 <section class="card">
-                    <div class="card-header border-purple">
-                        <i class="fa-solid fa-users-gear icon-header"></i>
-                        <h2>Покупатель (Заказчик)</h2>
+                    <div class="card-header border-purple space-between">
+                        <div class="flex-center">
+                            <i class="fa-solid fa-users-gear icon-header"></i>
+                            <h2>Покупатель (Заказчик)</h2>
+                        </div>
+                        <div class="header-actions-sm" style="display:flex; gap:0.5rem;">
+                            <button type="button" class="btn btn-sm btn-outline" id="btn-create-client"><i class="fa-solid fa-plus"></i> Новый</button>
+                            <button type="button" class="btn btn-sm btn-outline" id="btn-edit-client" style="display:none;"><i class="fa-solid fa-pen"></i></button>
+                            <button type="button" class="btn btn-sm btn-danger" id="btn-delete-client" style="display:none;"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="client_name">Название клиента / Заказчика *</label>
-                            <input type="text" id="client_name" value="АО «Вектор Прогресса»" required>
-                        </div>
-                        <div class="grid-2-inner">
-                            <div class="form-group">
-                                <label for="client_inn">ИНН</label>
-                                <input type="text" id="client_inn" value="7802987654">
-                            </div>
-                            <div class="form-group">
-                                <label for="client_kpp">КПП</label>
-                                <input type="text" id="client_kpp" value="780201001">
+                            <label for="client_select">Выберите заказчика</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-building input-icon"></i>
+                                <select id="client_select">
+                                    <option value="">-- Загрузка... --</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="client_ogrn">ОГРН</label>
-                            <input type="text" id="client_ogrn" value="9876543210987">
-                        </div>
-                        <div class="form-group">
-                            <label for="client_address">Адрес заказчика</label>
-                            <input type="text" id="client_address" value="г. Санкт-Петербург, Невский пр., д. 50">
-                        </div>
-                        <div class="grid-2-inner">
-                            <div class="form-group">
-                                <label for="client_phone">Телефон</label>
-                                <input type="text" id="client_phone" value="+7 (812) 987-65-43">
-                            </div>
-                            <div class="form-group">
-                                <label for="client_email">Email</label>
-                                <input type="email" id="client_email" value="contact@vector.ru">
-                            </div>
-                        </div>
-                        <div class="grid-2-inner">
-                            <div class="form-group">
-                                <label for="client_bank_name">Банк</label>
-                                <input type="text" id="client_bank_name" value="ПАО Сбербанк">
-                            </div>
-                            <div class="form-group">
-                                <label for="client_bik">БИК</label>
-                                <input type="text" id="client_bik" value="044525225">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="client_account">Расчетный счет (Р/с)</label>
-                            <input type="text" id="client_account" value="40702810000000000001">
-                        </div>
-                        <div class="form-group">
-                            <label for="client_corr_account">Корр. счет (К/с)</label>
-                            <input type="text" id="client_corr_account" value="30101810400000000225">
-                        </div>
-                        <div class="form-group">
-                            <label for="client_contact_person">Контактное лицо</label>
-                            <input type="text" id="client_contact_person" value="Петров П.П.">
+                        <div id="client-display" class="read-only-display mt-3" style="display:none;">
+                            <!-- Injected by JS -->
                         </div>
                     </div>
                 </section>
@@ -260,32 +208,185 @@
                 </div>
             </section>
 
-            <!-- Floating Action Bar for Generating Documents -->
-            <div class="action-bar-sticky">
-                <div class="action-bar-content">
-                    <div class="action-bar-info">
-                        <span class="action-bar-title">Сформировать документ:</span>
-                        <span class="action-bar-sub">Выберите необходимый формат файла</span>
                     </div>
-                    <div class="export-buttons">
-                        <button type="button" id="btn-export-docx" class="btn btn-export btn-docx">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> Счет на оплату (.docx)
-                        </button>
-                        <button type="button" id="btn-export-acceptance" class="btn btn-export btn-xlsx" style="background: var(--primary);">
-                            <i class="fa-solid fa-file-signature"></i> Акт (.docx)
-                        </button>
-                        <button type="button" id="btn-export-pdf" class="btn btn-export btn-pdf">
-                            <i class="fa-solid fa-file-pdf"></i> PDF (.pdf)
-                        </button>
-                    </div>
-                </div>
+                    </fieldset>
+                </form>
             </div>
 
-        </form>
-    </main>
+            <!-- VIEW: ORDERS LIST -->
+            <div id="view-orders-list" style="display: none;">
+                <section class="card">
+                    <div class="card-header space-between">
+                        <div class="flex-center">
+                            <i class="fa-solid fa-list-check icon-header"></i>
+                            <h2>Список заказов</h2>
+                        </div>
+                    </div>
+                    <div class="card-body no-padding">
+                        <div class="table-responsive">
+                            <table class="items-table" id="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">ID</th>
+                                        <th style="width: 17%;">Номер</th>
+                                        <th style="width: 17%;">Дата</th>
+                                        <th style="width: 43%;">Заказчик</th>
+                                        <th style="width: 15%;">Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Floating Action Bar for Generating Documents -->
+    <div class="action-bar-sticky">
+        <div class="action-bar-content" id="action-bar-create">
+            <div class="action-bar-info">
+                <span class="action-bar-title">Новый документ:</span>
+                <span class="action-bar-sub">Сохранить и перейти к скачиванию</span>
+            </div>
+            <div class="export-buttons">
+                <button type="button" id="btn-save-new" class="btn btn-export btn-docx">
+                    <i class="fa-solid fa-floppy-disk"></i> Создать заказ
+                </button>
+            </div>
+        </div>
+
+        <div class="action-bar-content" id="action-bar-edit" style="display:none;">
+            <div class="export-buttons" style="flex: 1; justify-content: flex-start; gap: 8px;">
+                <button type="button" id="btn-enable-edit" class="btn btn-primary" title="Редактировать заказ">
+                    <i class="fa-solid fa-pen"></i> Редактировать
+                </button>
+                <button type="button" id="btn-update-doc" class="btn btn-primary" title="Сохранить изменения" style="display:none;">
+                    <i class="fa-solid fa-save"></i> Сохранить
+                </button>
+                <button type="button" id="btn-copy-doc" class="btn btn-secondary" title="Создать копию заказа">
+                    <i class="fa-solid fa-copy"></i> Копировать
+                </button>
+            </div>
+            <div class="export-buttons">
+                <button type="button" id="btn-export-docx" class="btn btn-export btn-docx">
+                    <i class="fa-solid fa-file-word"></i> Счет (.docx)
+                </button>
+                <button type="button" id="btn-export-acceptance" class="btn btn-export btn-xlsx" style="background: var(--primary-purple);">
+                    <i class="fa-solid fa-file-signature"></i> Акт (.docx)
+                </button>
+                <button type="button" id="btn-export-pdf" class="btn btn-export btn-pdf">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Notification Container -->
     <div id="toast-container" class="toast-container"></div>
+
+    <!-- Modals -->
+    <!-- Company Modal -->
+    <div id="modal-company" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Реквизиты вашей компании</h2>
+                <button class="btn-close" onclick="closeModal('modal-company')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-company" onsubmit="event.preventDefault(); saveCompany();">
+                    <div class="form-group">
+                        <label>Название организации / ИП *</label>
+                        <input type="text" id="modal_company_name" required>
+                    </div>
+                    <div class="grid-2-inner">
+                        <div class="form-group"><label>ИНН (10 или 12 цифр)</label><input type="text" id="modal_company_inn" pattern="\d{10}|\d{12}" title="ИНН должен содержать 10 или 12 цифр"></div>
+                        <div class="form-group"><label>КПП (9 цифр)</label><input type="text" id="modal_company_kpp" pattern="\d{9}" title="КПП должен содержать 9 цифр"></div>
+                    </div>
+                    <div class="form-group"><label>ОГРН (13 или 15 цифр)</label><input type="text" id="modal_company_ogrn" pattern="\d{13}|\d{15}" title="ОГРН содержит 13 или 15 цифр"></div>
+                    <div class="form-group"><label>Юридический адрес</label><input type="text" id="modal_company_address"></div>
+                    <div class="grid-2-inner">
+                        <div class="form-group"><label>Телефон</label><input type="text" id="modal_company_phone" pattern="^(\+7|8)[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$" title="Введите валидный номер телефона РФ"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="modal_company_email"></div>
+                    </div>
+                    <div class="grid-2-inner">
+                        <div class="form-group"><label>Банк</label><input type="text" id="modal_company_bank_name"></div>
+                        <div class="form-group"><label>БИК (9 цифр)</label><input type="text" id="modal_company_bik" pattern="\d{9}" title="БИК содержит 9 цифр"></div>
+                    </div>
+                    <div class="form-group"><label>Расчетный счет (Р/с) (20 цифр)</label><input type="text" id="modal_company_account" pattern="\d{20}" title="Счет должен содержать 20 цифр"></div>
+                    <div class="form-group"><label>Корреспондентский счет (К/с) (20 цифр)</label><input type="text" id="modal_company_corr_account" pattern="\d{20}" title="Счет должен содержать 20 цифр"></div>
+                    <div class="form-group"><label>Руководитель (ФИО)</label><input type="text" id="modal_company_ceo_name"></div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-company')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Modal -->
+    <div id="modal-client" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-client-title">Новый заказчик</h2>
+                <button class="btn-close" onclick="closeModal('modal-client')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-client" onsubmit="event.preventDefault(); saveClient();">
+                    <input type="hidden" id="modal_client_id">
+                    <div class="form-group">
+                        <label>Название клиента / Заказчика *</label>
+                        <input type="text" id="modal_client_name" required>
+                    </div>
+                    <div class="grid-2-inner">
+                        <div class="form-group"><label>ИНН</label><input type="text" id="modal_client_inn" pattern="\d{10}|\d{12}" title="ИНН должен содержать 10 или 12 цифр"></div>
+                        <div class="form-group"><label>КПП</label><input type="text" id="modal_client_kpp" pattern="\d{9}" title="КПП должен содержать 9 цифр"></div>
+                    </div>
+                    <div class="form-group"><label>ОГРН</label><input type="text" id="modal_client_ogrn" pattern="\d{13}|\d{15}" title="ОГРН содержит 13 или 15 цифр"></div>
+                    <div class="form-group"><label>Адрес заказчика</label><input type="text" id="modal_client_address"></div>
+                    <div class="grid-2-inner">
+                        <div class="form-group"><label>Телефон</label><input type="text" id="modal_client_phone" pattern="^(\+7|8)[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$" title="Введите валидный номер телефона РФ"></div>
+                        <div class="form-group"><label>Email</label><input type="email" id="modal_client_email"></div>
+                    </div>
+                    <div class="grid-2-inner">
+                        <div class="form-group"><label>Банк</label><input type="text" id="modal_client_bank_name"></div>
+                        <div class="form-group"><label>БИК</label><input type="text" id="modal_client_bik" pattern="\d{9}" title="БИК содержит 9 цифр"></div>
+                    </div>
+                    <div class="form-group"><label>Расчетный счет (Р/с)</label><input type="text" id="modal_client_account" pattern="\d{20}" title="Счет должен содержать 20 цифр"></div>
+                    <div class="form-group"><label>Корр. счет (К/с)</label><input type="text" id="modal_client_corr_account" pattern="\d{20}" title="Счет должен содержать 20 цифр"></div>
+                    <div class="form-group"><label>Контактное лицо</label><input type="text" id="modal_client_contact_person"></div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-client')">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="modal-confirm" class="modal-overlay">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2 style="color: var(--danger);">Внимание</h2>
+                <button class="btn-close" onclick="closeModal('modal-confirm')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить этого контрагента? Это действие нельзя отменить.</p>
+                <div class="modal-footer mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('modal-confirm')">Отмена</button>
+                    <button type="button" id="btn-confirm-delete" class="btn btn-danger">Да, удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Application Script -->
     <script src="/static/js/app.js"></script>
